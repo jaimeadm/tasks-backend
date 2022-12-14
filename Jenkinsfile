@@ -4,18 +4,21 @@ pipeline {
     stages {
         stage('Build') { 
             steps { 
-                sh 'echo contruindo...' 
+                //sh 'echo contruindo...'
+                echo  'Building...'
             }
         }
         stage('Test'){
             steps {
-                sh 'echo testando...' 
+                //sh 'echo testando...' 
                 //junit 'reports/**/*.xml' 
+                echo 'Testing...'
             }
         }
         stage('Deploy') {
             steps {
-                sh 'echo publicando...' 
+                //sh 'echo publicando...'
+                echo 'Deploying...' 
             }
         }
     }
