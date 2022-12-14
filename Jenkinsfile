@@ -48,5 +48,15 @@ pipeline {
                 }
             }
         }
+        stage('Deploy Frontend'){
+            steps {
+                dir('frontend') {
+                    echo 'Deploying Frontend...'
+                    git credentialsId: 'github_login', url: 'https://github.com/jaimeadm/tasks-frontend'
+                    sh 'mvn clean package'
+                    eploy adapters: [tomcat8(credentialsId: 'tomcat_login', path: '', url: 'http://192.168.0.131:8001/')], contextPath: 'tasks-frontend', war: 'target/tasks-frontend.war'
+                }
+            }
+        }
     }
 }
