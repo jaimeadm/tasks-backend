@@ -4,21 +4,48 @@ pipeline {
     stages {
         stage('Build') { 
             steps { 
-                //sh 'echo contruindo...'
                 echo  'Building...'
+                sh 'mvn clean package -DskipTests=true'
             }
         }
-        stage('Test'){
+        stage('Unit Tests'){
             steps {
-                //sh 'echo testando...' 
-                //junit 'reports/**/*.xml' 
                 echo 'Testing...'
+                sh 'mvn test'
             }
         }
-        stage('Deploy') {
+        stage('Sonar Analysis') {
+            environment {
+                scannerHome = tool 'SONAR_SCANNER'
+            }            
             steps {
-                //sh 'echo publicando...'
-                echo 'Deploying...' 
+                echo 'Analysing with Sonnar...'
+                withSonarQubeEnv('SONAR_JENKINS') {
+                    sh "${scannerHome}/bin/sonnar-scanner -e -Dsonar.projectKey=DeployBackend -Dsonar.host.url=http://192.168.0.131:9000 -Dsonar.login=8aa2e4c0a4c215edc4c51e1625161bd80a279895 -Dsonar.java.binaries=target -Dsonar.coverage.exclusions=**/.mvn/**,**/src/test/**,**/model/**,**Application.java"
+                }
+            }
+        }
+        stage('Quality Gate'){
+            steps {
+                echo 'Checking with Quality Gate...'
+                sleep(5)
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        stage('Deploy'){
+            steps {
+                echo 'Deploying...'
+                deploy adapters: [tomcat8(credentialsId: 'tomcat_login', path: '', url: 'http://192.168.0.131:8001/')], contextPath: 'tasks-backend', war: 'target/tasks-backend.war'
+            }
+        }
+        stage('API Test'){
+            steps {
+                dir('api-test') {
+                    echo 'API testing...'
+                    git credentialsId: 'github_login', url: 'https://github.com/jaimeadm/tasks-api-test'
+                }
             }
         }
     }
