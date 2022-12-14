@@ -34,7 +34,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy'){
+        stage('Deploy Backend'){
             steps {
                 echo 'Deploying...'
                 deploy adapters: [tomcat8(credentialsId: 'tomcat_login', path: '', url: 'http://192.168.0.131:8001/')], contextPath: 'tasks-backend', war: 'target/tasks-backend.war'
@@ -45,6 +45,7 @@ pipeline {
                 dir('api-test') {
                     echo 'API testing...'
                     git credentialsId: 'github_login', url: 'https://github.com/jaimeadm/tasks-api-test'
+                    sh 'mvn test'
                 }
             }
         }
@@ -55,6 +56,15 @@ pipeline {
                     git credentialsId: 'github_login', url: 'https://github.com/jaimeadm/tasks-frontend'
                     sh 'mvn clean package'
                     eploy adapters: [tomcat8(credentialsId: 'tomcat_login', path: '', url: 'http://192.168.0.131:8001/')], contextPath: 'tasks-frontend', war: 'target/tasks-frontend.war'
+                }
+            }
+        }
+        stage('Functional Test'){
+            steps {
+                dir('functional-test') {
+                    echo 'API functional testing...'
+                    git credentialsId: 'github_login', url: 'https://github.com/jaimeadm/tasks-functional-tests'
+                    sh 'mvn test'
                 }
             }
         }
