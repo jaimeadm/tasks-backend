@@ -42,8 +42,8 @@ pipeline {
         }
         stage('API Test') {
             steps {
+                echo 'API testing...'
                 dir('api-test') {
-                    echo 'API testing...'
                     git credentialsId: 'github_login', url: 'https://github.com/jaimeadm/tasks-api-test'
                     sh 'mvn test'
                 }
@@ -51,8 +51,8 @@ pipeline {
         }
         stage('Deploy Frontend') {
             steps {
+                echo 'Deploying Frontend...'
                 dir('frontend') {
-                    echo 'Deploying Frontend...'
                     git credentialsId: 'github_login', url: 'https://github.com/jaimeadm/tasks-frontend'
                     sh 'mvn clean package'
                     deploy adapters: [tomcat8(credentialsId: 'tomcat_login', path: '', url: 'http://192.168.0.131:8001/')], contextPath: 'tasks', war: 'target/tasks.war'
@@ -61,8 +61,9 @@ pipeline {
         }
         stage('Functional Test') {
             steps {
+                echo 'API functional testing...'
+                sleep(5)
                 dir('functional-test') {
-                    echo 'API functional testing...'
                     git credentialsId: 'github_login', url: 'https://github.com/jaimeadm/tasks-functional-tests'
                     sh 'mvn test'
                 }
@@ -76,9 +77,9 @@ pipeline {
         }
         stage('Health Check') {
             steps {
+                echo 'Health Check testing...'
                 sleep(5)
                 dir('functional-test') {
-                    echo 'Health Check testing...'
                     sh 'mvn verify -Dskip.surefire.tests'
                 }
             }
