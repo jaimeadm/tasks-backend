@@ -79,7 +79,7 @@ pipeline {
                 sleep(5)
                 dir('functional-test') {
                     echo 'Health Check testing...'
-                    sh 'mvn verify -Dskip.surefire.tests'
+                    //sh 'mvn verify -Dskip.surefire.tests'
                 }
             }
         }
