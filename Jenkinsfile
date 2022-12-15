@@ -71,7 +71,7 @@ pipeline {
         stage('Deploy Prod') {
             steps {
                 echo 'Deploying prod...'
-                //sh 'docker-compose build && docker-compose up -d'
+                sh 'docker-compose build && docker-compose up -d'
             }
         }
         stage('Health Check') {
@@ -79,7 +79,7 @@ pipeline {
                 sleep(5)
                 dir('functional-test') {
                     echo 'Health Check testing...'
-                    //sh 'mvn verify -Dskip.surefire.tests'
+                    sh 'mvn verify -Dskip.surefire.tests'
                 }
             }
         }
