@@ -10,7 +10,7 @@ pipeline {
         }
         stage('Unit Tests') {
             steps {
-                echo 'Testing...'
+                echo 'Unit testing...'
                 sh 'mvn test'
             }
         }
@@ -72,7 +72,7 @@ pipeline {
         stage('Deploy Prod') {
             steps {
                 echo 'Deploying prod...'
-                sh 'docker-compose build && docker-compose up -d'
+                //sh 'docker-compose build && docker-compose up -d'
             }
         }
     }
