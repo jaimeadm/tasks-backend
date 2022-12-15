@@ -1,6 +1,6 @@
 HELP.md
 target/
-tasks-frontend/
+#tasks-frontend/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
