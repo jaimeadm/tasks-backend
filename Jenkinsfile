@@ -68,7 +68,6 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy Prod') {
             steps {
                 echo 'Deploying prod...'
