@@ -55,7 +55,7 @@ pipeline {
                     echo 'Deploying Frontend...'
                     git credentialsId: 'github_login', url: 'https://github.com/jaimeadm/tasks-frontend'
                     sh 'mvn clean package'
-                    deploy adapters: [tomcat8(credentialsId: 'tomcat_login', path: '', url: 'http://192.168.0.131:8001/')], contextPath: 'tasks-frontend', war: 'target/tasks-frontend.war'
+                    deploy adapters: [tomcat8(credentialsId: 'tomcat_login', path: '', url: 'http://192.168.0.131:8001/')], contextPath: 'tasks-frontend', war: 'target/tasks.war'
                 }
             }
         }
