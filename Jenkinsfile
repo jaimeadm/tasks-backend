@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') { 
             steps { 
-                echo  'Building...'
+                echo 'Building...'
                 sh 'mvn clean package -DskipTests=true'
             }
         }
@@ -36,7 +36,7 @@ pipeline {
         }
         stage('Deploy Backend') {
             steps {
-                echo 'Deploying...'
+                echo 'Deploying Backend...'
                 deploy adapters: [tomcat8(credentialsId: 'tomcat_login', path: '', url: 'http://192.168.0.131:8001/')], contextPath: 'tasks-backend', war: 'target/tasks-backend.war'
             }
         }
@@ -71,6 +71,7 @@ pipeline {
 
         stage('Deploy Prod') {
             steps {
+                echo 'Deploying prod...'
                 sh 'docker-compose build && docker-compose up -d'
             }
         }
